@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   nexus:
-    image: sonatype/nexus3:3.22.0
+    image: sonatype/nexus3:latest
     container_name: nexus
     ports:
       - 19081:8081
