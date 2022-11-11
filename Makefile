@@ -8,6 +8,7 @@ nexus-down:
 nexus-stop:
 	docker stop nexus
 
+
 # Kubegres operator
 kubegres-install:
 	kubectl apply -f https://raw.githubusercontent.com/reactive-tech/kubegres/v1.16/kubegres.yaml
@@ -19,3 +20,12 @@ postgres-upgrade:
 	helm upgrade postgres --namespace postgres -f k8s/postgres/base/values.yaml k8s/postgres/base --debug
 postgres-template:
 	helm template --namespace postgres -f k8s/postgres/base/values.yaml k8s/postgres/base --debug
+
+# Postgres schemas
+# TODO: fix postgres schemas charts
+postgres-schemas-install:
+	helm install postgres-schemas --namespace postgres -f k8s/postgres/users-schemas/values.yaml k8s/postgres/users-schemas --debug
+postgres-schemas-upgrade:
+	helm upgrade postgres-schemas --namespace postgres -f k8s/postgres/users-schemas/values.yaml k8s/postgres/users-schemas --debug
+postgres-schemas-template:
+	helm template --namespace postgres -f k8s/postgres/users-schemas/values.yaml k8s/postgres/users-schemas --debug

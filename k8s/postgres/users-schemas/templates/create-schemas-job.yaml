@@ -1,0 +1,68 @@
+{{ if .Values.createSchemas }}
+{{ $release := .Release }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "postgres-schemas-job"
+  labels:
+    helm.sh/chart: "postgres-schemas-job"
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      name: "create-schemas"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: post-install-job
+          image: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
+          command: ["sh", "-c"]
+          args:
+            - "/opt/create-schemas.sh"
+{{/*            - "chmod 755 /opt/create-schemas.sh"*/}}
+{{/*            - "psql -V"*/}}
+{{/*            - "/opt/create-schemas.sh"*/}}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: create-schemas-config-map
+                  key: superUserName
+            - name: POSTGRES_MAIN_PASS
+              valueFrom:
+                secretKeyRef: # get pass from main postgres secret
+                  name: postgres-secret
+                  key: superUserPassword
+            - name: POSTGRES_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: create-schemas-config-map
+                  key: postgresUrl
+            {{- range $schema := .Values.postgresSchemas }}
+            {{- if $schema.create }}
+            - name: "POSTGRES_USER_{{- $schema.name }}"
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: "{{ $schema.secretName }}-secret"
+            - name: "POSTGRES_PASSWORD_{{- $schema.name }}"
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: "{{ $schema.secretName }}-secret"
+            - name: "POSTGRES_PASSWORD_{{- $schema.name }}"
+              value: "{{- $schema.name }}"
+            {{- end }}
+            {{- end }}
+          volumeMounts:
+            - mountPath: /opt/create-schemas.sh
+              name: create-schemas-script
+      volumes:
+        - name: create-schemas-script
+          configMap:
+            name: create-schemas-script
+            defaultMode: 0755
+{{- end }}

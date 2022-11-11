@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "properties": {
+    "image": {
+      "description": "Container Image",
+      "type": "object",
+      "properties": {
+        "repo": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "repo",
+        "tag"
+      ]
+    },
+    "postgres": {
+      "description": "Postgres data",
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ]
+    },
+    "createSchemas": {
+      "type": "boolean"
+    },
+    "postgresSchemas": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/us:postgresUserSchema"
+      }
+    }
+  },
+  "required": [
+    "image",
+    "createSchemas",
+    "postgresSchemas"
+  ],
+  "title": "Values",
+  "type": "object",
+  "definitions": {
+    "us:postgresUserSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "create": {
+          "type": "boolean"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "secretName": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "create"
+      ]
+    }
+  }
+}

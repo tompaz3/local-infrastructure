@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-schemas-script
+  namespace: {{ .Release.Namespace }}
+data:
+  create-schemas.sh: |-
+{{ .Files.Get "create-schemas.sh" | indent 4}}

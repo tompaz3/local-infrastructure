@@ -1,0 +1,20 @@
+image:
+  repo: postgres
+  tag: "15"
+
+postgres:
+  url: "postgresql://postgres-service:5432"
+
+createSchemas: true
+
+postgresSchemas:
+  - name: "safe_ingredients"
+    create: true
+    username: "safe_ingredients"
+    password: "safe_ingredients"
+    secretName: "safe-ingredients"
+  - name: "keycloak"
+    create: true
+    username: "keycloak"
+    password: "keycloak"
+    secretName: "keycloak"
