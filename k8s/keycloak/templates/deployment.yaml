@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
+          {{- with .Values.postgres }}
+          args: [ "start-dev", "--db-url", "${POSTGRES_JDBC_URI}",
+                  "--db", "${POSTGRES_DB_NAME}",
+                  "--db-username", "${POSTGRES_DB_USER}",
+                  "--db-password", "${POSTGRES_DB_PASS}",
+                  "--hostname-strict", "false", "--metrics-enabled", "true" ]
+          {{- end }}
+          env:
+            - name: KEYCLOAK_ADMIN
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: adminUser
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-secret
+                  key: adminPassword
+            - name: KC_PROXY
+              value: "edge"
+            - name: POSTGRES_JDBC_URI
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-postgres
+                  key: postgresJdbcUri
+            - name: POSTGRES_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-postgres
+                  key: postgresDbName
+            - name: POSTGRES_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-postgres
+                  key: postgresDbUser
+            - name: POSTGRES_DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-postgres
+                  key: postgresDbPass
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /realms/master
+              port: 8080
+      restartPolicy: Always
+

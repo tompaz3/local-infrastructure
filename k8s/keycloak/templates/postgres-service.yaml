@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgres-service
+  namespace: {{ .Release.Namespace }}
+spec:
+  type: ExternalName
+  externalName: "{{- .Values.postgres.serviceName }}.{{- .Values.postgres.namespace }}.svc.cluster.local"
+  ports:
+    - port: 5432
+      targetPort: 30432

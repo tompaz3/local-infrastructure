@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "properties": {
+    "image": {
+      "description": "Container Image",
+      "type": "object",
+      "properties": {
+        "repo": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "repo",
+        "tag"
+      ]
+    },
+    "postgres": {
+      "description": "Postgres URL",
+      "type": "object",
+      "properties": {
+        "jdbcUri": {
+          "type": "string"
+        },
+        "dbName": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "serviceName": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "jdbcUri",
+        "dbName",
+        "username",
+        "password",
+        "namespace",
+        "serviceName"
+      ]
+    }
+  },
+  "required": [
+    "image",
+    "postgres"
+  ],
+  "title": "Values",
+  "type": "object"
+}

@@ -1,0 +1,12 @@
+image:
+  repo: quay.io/keycloak/keycloak
+  tag: 17.0.0
+
+postgres:
+  jdbcUri: jdbc:postgresql://postgres-service:5432/keycloak
+  dbName: postgres
+  username: keycloak
+  password: keycloak
+  namespace: postgres
+  serviceName: postgres-service
+
