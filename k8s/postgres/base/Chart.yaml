@@ -1,0 +1,6 @@
+apiVersion: v2
+name: Postgres chart
+version: 0.0.1
+maintainers:
+  - name: Tomasz Paździurek
+    email: t.pazdziurek@gmail.com

@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: postgres
+    replicationRole: primary
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+    {{ with .Values.primary.ports }}
+    - port: {{ .port }}
+      nodePort: {{ .nodePort }}
+      targetPort: {{ .targetPort }}
+      protocol: TCP
+    {{ end }}
+  selector:
+    app: postgres
+    replicationRole: primary
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service-replica
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: postgres
+    replicationRole: replica
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+    {{ with .Values.replica.ports }}
+    - port: {{ .port }}
+      nodePort: {{ .nodePort }}
+      targetPort: {{ .targetPort }}
+      protocol: TCP
+    {{ end }}
+  selector:
+    app: postgres
+    replicationRole: replica

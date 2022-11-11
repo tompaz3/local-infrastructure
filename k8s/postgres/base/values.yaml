@@ -1,0 +1,18 @@
+image:
+  repo: postgres
+  tag: "15"
+
+superUserPassword: admin
+replicationUserPassword: replicaAdmin
+
+primary:
+  ports:
+    port: 5432
+    nodePort: 30432
+    targetPort: 5432
+
+replica:
+  ports:
+    port: 5432
+    nodePort: 30433
+    targetPort: 5432

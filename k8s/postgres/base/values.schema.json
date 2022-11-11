@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "properties": {
+    "image": {
+      "description": "Container Image",
+      "type": "object",
+      "properties": {
+        "repo": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "repo",
+        "tag"
+      ]
+    },
+    "superUserPassword": {
+      "description": "Super user password",
+      "type": "string"
+    },
+    "replicationUserPassword": {
+      "description": "Replication user password",
+      "type": "string"
+    },
+    "primary": {
+      "description": "Primary Postgres properties",
+      "properties": {
+        "ports": {
+          "description": "Postgres service ports",
+          "$ref": "#/definitions/ps:postgresServicePorts"
+        }
+      },
+      "required": [
+        "ports"
+      ]
+    },
+    "replica": {
+      "description": "Replica Postgres properties",
+      "properties": {
+        "ports": {
+          "description": "Postgres service ports",
+          "$ref": "#/definitions/ps:postgresServicePorts"
+        }
+      },
+      "required": [
+        "ports"
+      ]
+    }
+  },
+  "required": [
+    "superUserPassword",
+    "replicationUserPassword",
+    "primary",
+    "replica"
+  ],
+  "title": "Values",
+  "type": "object",
+  "definitions": {
+    "ps:tcpPort": {
+      "description": "TCP port",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 65535
+    },
+    "ps:postgresServicePorts": {
+      "description": "Postgres service ports",
+      "type": "object",
+      "properties": {
+        "port": {
+          "$ref": "#/definitions/ps:tcpPort"
+        },
+        "nodePort": {
+          "$ref": "#/definitions/ps:tcpPort"
+        },
+        "targetPort": {
+          "$ref": "#/definitions/ps:tcpPort"
+        }
+      },
+      "required": [
+        "port",
+        "nodePort",
+        "targetPort"
+      ]
+    }
+  }
+}
